@@ -1,0 +1,60 @@
+// which pins are the LEDs plugged into
+int leds[] = {2, 3, 4, 5};
+
+// which pins are the buttons connected to
+int buttons[] = {6, 7, 8, 9};
+
+// randomized pattern
+int pattern[] = {2, 3, 1, 0};
+
+// user input pattern
+int userPattern[] = {0, 0, 0, 0};
+
+int userIndex = 0;
+
+void setup() {
+
+  Serial.begin(9600);
+  Serial.println("system online");
+
+  // activate the buttons
+  for ( int i = 0; i < 4; i++) {
+    pinMode(buttons[i], INPUT_PULLUP);
+  }
+}
+
+void loop() {
+  // run thru each button
+  for (int i = 0; i < 4; i++) {
+    if (digitalRead(buttons[i]) == LOW) {
+      userPattern[userIndex] = i;
+      userIndex++;
+
+
+
+      Serial.println(i);
+    }
+  }
+
+  delay(200);
+
+  // did the user input all 4 numbers?
+  if (userIndex > 3) {
+    // just print it out
+    Serial.print("pattern: ");
+    for (int i = 0; i < 4; i++) {
+      Serial.print(userPattern[i]);
+    }
+    Serial.println("");
+
+    // check it against the answer
+    for (int i = 0; i < 4; i++) {
+      if(userPattern[i] != pattern[i]) {
+        Serial.println("WRONG");
+      }
+    }
+
+    delay(5000);
+  }
+
+} 
